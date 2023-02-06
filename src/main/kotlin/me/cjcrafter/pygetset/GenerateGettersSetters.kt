@@ -5,6 +5,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.ui.Messages
+import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.psi.PsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.jetbrains.python.psi.*
@@ -14,6 +15,7 @@ import java.util.Objects
 // properties so the user can generate getters and setters
 // for their python variables
 class GenerateGettersSetters : AnAction() {
+
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: return
         val editor = e.getData(CommonDataKeys.EDITOR) ?: return
@@ -26,6 +28,16 @@ class GenerateGettersSetters : AnAction() {
             Messages.showErrorDialog(project, "Could not find python class: $element", "Error")
             return
         }
+
+        val popup = JBPopupFactory.getInstance().createComponentPopupBuilder(GenerateOptionsPanel(parent), null)
+            .setTitle("Select Properties to Generate Getters and Setters")
+            .setMovable(true)
+            .createPopup()
+
+        popup.showInCenterOf(e.inputEvent.component)
+
+        if (true)
+            return
 
         // Setup variables for the loop
         val factory = PyElementGenerator.getInstance(project)
