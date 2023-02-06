@@ -14,7 +14,18 @@
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-    Adds automatic getter/setter generation options to JetBrains Python editors
+    Adds getter/setter generation options to for Python. Right now, this is
+    only good for generating getter/setter properties if you are using Python's
+    private variables. In the future, there will be many options for generating
+    custom templates for your getters and setters.
+
+    Coming Soon:
+    - Deleters
+    - UI for choosing which properties
+    - type support
+
+    Usage is easy:
+    alt+insert > Generate > Getters and Setters
   ]]></description>
 
     <!-- Product and plugin compatibility requirements.
