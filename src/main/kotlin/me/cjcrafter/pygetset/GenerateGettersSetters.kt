@@ -29,67 +29,11 @@ class GenerateGettersSetters : AnAction() {
             return
         }
 
-        val popup = JBPopupFactory.getInstance().createComponentPopupBuilder(GenerateOptionsPanel(parent), null)
+        val popup = JBPopupFactory.getInstance().createComponentPopupBuilder(GenerateOptionsPanel(project, parent), null)
             .setTitle("Select Properties to Generate Getters and Setters")
             .setMovable(true)
             .createPopup()
 
-        popup.showInCenterOf(e.inputEvent.component)
-
-        if (true)
-            return
-
-        // Setup variables for the loop
-        val factory = PyElementGenerator.getInstance(project)
-        val language = LanguageLevel.getLatest()
-
-        val gettersAndSetters = ArrayList<PyFunction>()
-        for (property in parent.instanceAttributes) {
-            var name = property.name ?: return
-            name = if (name.startsWith("__")) name.substring(2) else name
-
-            val getter = factory.createFromText(
-                language, PyFunction::class.java, """
-                @property
-                def ${name}(self):
-                    return self.${property.name} 
-                
-            """.trimIndent()
-            )
-
-            val setter = factory.createFromText(
-                language, PyFunction::class.java, """
-                @${name}.setter
-                def ${name}(self, ${name}):
-                    self.${property.name} = $name
-                    
-            """.trimIndent()
-            )
-
-            gettersAndSetters.add(getter)
-            gettersAndSetters.add(setter)
-        }
-
-        val initMethod = parent.findMethodByName("__init__", false, null)
-        if (initMethod == null) {
-            Messages.showErrorDialog(project, "Could not find __init__ method in ${parent.name}", "Error")
-            return
-        }
-
-        // We need these reversed since we always add the method right below
-        // the __init__ method (which pushes the other methods down)
-        gettersAndSetters.reverse()
-
-        // WriteCommandAction lets users undo the generation
-        val classElement = initMethod.parent
-        WriteCommandAction.runWriteCommandAction(project) {
-            for (method in gettersAndSetters)
-                classElement.addAfter(method, initMethod)
-        }
-
-        Messages.showInfoMessage(
-            project, "Generated ${gettersAndSetters.size} methods\n\n" +
-                    gettersAndSetters, "Generated Getters and Setters"
-        )
+        popup.showInFocusCenter()
     }
 }
