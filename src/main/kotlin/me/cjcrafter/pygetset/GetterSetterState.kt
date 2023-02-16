@@ -24,7 +24,7 @@ data class GetterSetterState(
     var isDeleter: Boolean = true,
     var deleter: String = """
             @{name}.deleter
-            def {name}(self, {name}):
+            def {name}(self):
                 del self.{property}
             
     """.trimIndent()

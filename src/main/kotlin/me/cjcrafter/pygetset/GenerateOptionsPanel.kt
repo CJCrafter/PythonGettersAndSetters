@@ -81,15 +81,15 @@ class GenerateOptionsPanel(project: Project, clazz: PyClass) : JPanel() {
             name = if (name.startsWith("__")) name.substring(2) else name
 
             if (persistentData.isGetter) {
-                val getter = factory.createFromText(language, PyFunction::class.java, persistentData.getter)
+                val getter = factory.createFromText(language, PyFunction::class.java, persistentData.getter.replace("{name}", name).replace("{property}", property.name.orEmpty()))
                 gettersAndSetters.add(getter)
             }
             if (persistentData.isSetter) {
-                val setter = factory.createFromText(language, PyFunction::class.java, persistentData.setter)
+                val setter = factory.createFromText(language, PyFunction::class.java, persistentData.setter.replace("{name}", name).replace("{property}", property.name.orEmpty()))
                 gettersAndSetters.add(setter)
             }
             if (persistentData.isDeleter) {
-                val deleter = factory.createFromText(language, PyFunction::class.java, persistentData.deleter)
+                val deleter = factory.createFromText(language, PyFunction::class.java, persistentData.deleter.replace("{name}", name).replace("{property}", property.name.orEmpty()))
                 gettersAndSetters.add(deleter)
             }
         }
@@ -121,6 +121,8 @@ class GenerateOptionsPanel(project: Project, clazz: PyClass) : JPanel() {
         val field = CustomEditorField(language, project, code)
         field.setOneLineMode(false)
         field.isVisible = true
+        field.isViewer = false
+        field.isEnabled = true
         field.setCaretPosition(0)
 
         add(field)
