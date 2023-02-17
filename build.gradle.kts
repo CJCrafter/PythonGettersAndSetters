@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "me.cjcrafter"
-version = "0.1.3"
+version = "0.3.0"
 
 repositories {
     mavenCentral()
