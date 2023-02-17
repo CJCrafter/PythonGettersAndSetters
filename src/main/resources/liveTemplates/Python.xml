@@ -1,0 +1,23 @@
+<templateSet group="Python">
+  <template name="getter" value="@property&#10;def $name$(self):&#10;    return self.$property$&#10;    " description="getter property" toReformat="false" toShortenFQNames="true">
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="property_name" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python_Class" value="true" />
+    </context>
+  </template>
+  <template name="setter" value="@$name$.setter&#10;def $name$(self, $name$):&#10;    self.$property$ = $name$&#10;    " description="setter property" toReformat="false" toShortenFQNames="true">
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="property_name" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python_Class" value="true" />
+    </context>
+  </template>
+  <template name="deleter" value="@$name$.deleter&#10;def $name$(self):&#10;    del self.$property$&#10;    " description="deleter property" toReformat="false" toShortenFQNames="true">
+    <variable name="name" expression="" defaultValue="" alwaysStopAt="true" />
+    <variable name="property_name" expression="" defaultValue="" alwaysStopAt="true" />
+    <context>
+      <option name="Python_Class" value="true" />
+    </context>
+  </template>
+</templateSet>

@@ -37,6 +37,7 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="me.cjcrafter.pygetset.GetterSetterService"/>
+        <defaultLiveTemplates file="/liveTemplates/Python.xml"/>
     </extensions>
 
     <actions>
