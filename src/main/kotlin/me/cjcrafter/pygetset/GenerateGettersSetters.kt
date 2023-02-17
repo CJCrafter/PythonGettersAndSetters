@@ -1,25 +1,17 @@
 package me.cjcrafter.pygetset
 
-import com.intellij.codeInsight.template.TemplateManager
-import com.intellij.codeInsight.template.impl.LiveTemplatesConfigurable
-import com.intellij.codeInsight.template.impl.TemplateImpl
 import com.intellij.codeInsight.template.impl.TemplateSettings
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
-import com.intellij.openapi.actionSystem.LangDataKeys
 import com.intellij.openapi.command.WriteCommandAction
-import com.intellij.openapi.options.Configurable
 import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.ui.Messages
-import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.Cell
 import com.intellij.ui.dsl.builder.panel
 import com.jetbrains.python.psi.*
-import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
 
 // Creates a popup window that lists the current python class
 // properties so the user can generate getters and setters
