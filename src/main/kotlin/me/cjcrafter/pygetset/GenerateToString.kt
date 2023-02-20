@@ -47,11 +47,11 @@ class GenerateToString : AnAction() {
         val panel = panel {
             buttonsGroup(title = "Template:") {
                 row {
-                    radioButton("Table", ToStringTemplate.TABULAR_TEMPLATE.name)
-                    radioButton("JSON", ToStringTemplate.JSON_TEMPLATE.name)
+                    radioButton("Table", ToStringTemplate.TABULAR_TEMPLATE)
+                    radioButton("JSON", ToStringTemplate.JSON_TEMPLATE)
                 }
-            }.bind({ preview.model::template }, {
-                preview.model.template = it.get()
+            }.bind({ preview.model.template }, {
+                preview.model.template = it
             })
 
             row {
