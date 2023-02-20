@@ -13,9 +13,13 @@ import com.intellij.ui.dsl.builder.Cell
 import com.intellij.ui.dsl.builder.panel
 import com.jetbrains.python.psi.*
 
-// Creates a popup window that lists the current python class
-// properties so the user can generate getters and setters
-// for their python variables
+/**
+ * This action creates a popup window. The window includes options that allows
+ * people to generate getters, setters, and deleters for python. It uses the
+ * "Live Templates" to control the format of the generated methods. Note that
+ * in Python, getter/setters should be generally avoided. If you must use a
+ * private variable, then this generator is useful for you.
+ */
 class GenerateGettersSetters : AnAction() {
 
     override fun actionPerformed(e: AnActionEvent) {
@@ -88,6 +92,8 @@ class GenerateGettersSetters : AnAction() {
         val factory = PyElementGenerator.getInstance(project)
         val language = LanguageLevel.getLatest()
         val gettersAndSetters = ArrayList<PyFunction>()
+
+        // Loop through the python class' instance variables to generate methods
         for (property in parent.instanceAttributes) {
 
             // Check to see if the user skipped this property
