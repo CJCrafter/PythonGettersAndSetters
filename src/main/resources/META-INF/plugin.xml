@@ -1,18 +1,8 @@
-<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
     <id>me.cjcrafter.py-get-set</id>
-
-    <!-- Public plugin name should be written in Title Case.
-         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
     <name>Python Getters and Setters</name>
-
-    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
     <vendor email="collinjbarber@gmail.com" url="https://www.github.com/cjcrafter">CJCrafter</vendor>
 
-    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
-         Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
-         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
     Adds getter/setter/deleter generation options to for Python. When you generate
     getters and setters, you will be prompted asking for which instance variables
@@ -24,13 +14,9 @@
     alt+insert > Generate > Getters and Setters
   ]]></description>
 
-    <!-- Product and plugin compatibility requirements.
-         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.python</depends>
 
-    <!-- Extension points defined by the plugin.
-         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
         <defaultLiveTemplates file="/liveTemplates/Python.xml"/>
     </extensions>
@@ -38,6 +24,10 @@
     <actions>
         <action id="me.cjcrafter.pygetset.GenerateGettersSetters" class="me.cjcrafter.pygetset.GenerateGettersSetters"
                 text="Getters and Setters" description="Generate getters and setters for your properties">
+            <add-to-group group-id="GenerateGroup" anchor="last"/>
+        </action>
+        <action id="me.cjcrafter.pygetset.GenerateToString" class="me.cjcrafter.pygetset.GenerateToString"
+                text="ToString" description="Generate __str__ method for your class">
             <add-to-group group-id="GenerateGroup" anchor="last"/>
         </action>
     </actions>
