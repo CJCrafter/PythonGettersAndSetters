@@ -44,16 +44,15 @@ class GenerateToString : AnAction() {
 
         // Prompt the user with a radio button, so they may choose the template
         // for the generated method.
-        val panel = panel { // line 47
-            /*buttonsGroup(title = "Template:") {
-                for (value in ToStringTemplate.values()) {
-                    row {
-                        radioButton(value.name, value)
-                    }
+        val panel = panel {
+            buttonsGroup(title = "Template:") {
+                row {
+                    radioButton("Table", ToStringTemplate.TABULAR_TEMPLATE.name)
+                    radioButton("JSON", ToStringTemplate.JSON_TEMPLATE.name)
                 }
             }.bind({ preview.model::template }, {
-                preview.model.template = it.get() // I think this is the error...template is an enum ToStringTemplate
-            })*/
+                preview.model.template = it.get()
+            })
 
             row {
                 checkBox("Use Single Quotes")
