@@ -26,9 +26,5 @@
                 text="Getters and Setters" description="Generate getters and setters for your properties">
             <add-to-group group-id="GenerateGroup" anchor="last"/>
         </action>
-        <action id="me.cjcrafter.pygetset.GenerateToString" class="me.cjcrafter.pygetset.GenerateToString"
-                text="ToString" description="Generate __str__ method for your class">
-            <add-to-group group-id="GenerateGroup" anchor="last"/>
-        </action>
     </actions>
 </idea-plugin>
