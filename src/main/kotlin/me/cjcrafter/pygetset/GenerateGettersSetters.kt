@@ -35,11 +35,6 @@ class GenerateGettersSetters : AnAction() {
             return
         }
 
-        // Access the current live templates that the user may edit
-        val getterFormat = TemplateSettings.getInstance().getTemplate("getter", "Python")!!
-        val setterFormat = TemplateSettings.getInstance().getTemplate("setter", "Python")!!
-        val deleterFormat = TemplateSettings.getInstance().getTemplate("deleter", "Python")!!
-
         // Prompt the user with checkboxes, so they can control which
         // properties they want getters and setters for
         lateinit var getterCheckbox: Cell<JBCheckBox>
@@ -91,6 +86,11 @@ class GenerateGettersSetters : AnAction() {
         val factory = PyElementGenerator.getInstance(project)
         val language = LanguageLevel.getLatest()
         val gettersAndSetters = ArrayList<PyFunction>()
+
+        // Access the current live templates that the user may edit
+        val getterFormat = TemplateSettings.getInstance().getTemplate("getter", "Python")!!
+        val setterFormat = TemplateSettings.getInstance().getTemplate("setter", "Python")!!
+        val deleterFormat = TemplateSettings.getInstance().getTemplate("deleter", "Python")!!
 
         // Loop through the python class' instance variables to generate methods
         for (property in parent.instanceAttributes) {
