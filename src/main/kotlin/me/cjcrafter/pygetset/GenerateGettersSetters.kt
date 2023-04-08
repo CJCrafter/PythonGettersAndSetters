@@ -42,19 +42,18 @@ class GenerateGettersSetters : AnAction() {
 
         // Prompt the user with checkboxes, so they can control which
         // properties they want getters and setters for
-        var getterCheckbox: Cell<JBCheckBox>? = null
-        var setterCheckbox: Cell<JBCheckBox>? = null
-        var deleterCheckbox: Cell<JBCheckBox>? = null
+        lateinit var getterCheckbox: Cell<JBCheckBox>
+        lateinit var setterCheckbox: Cell<JBCheckBox>
+        lateinit var deleterCheckbox: Cell<JBCheckBox>
         val properties = HashMap<String, Cell<JBCheckBox>>()
         val panel = panel {
             row {
                 getterCheckbox = checkBox("Generate Getters")
-                getterCheckbox!!.component.isSelected = true
-
+                getterCheckbox.component.isSelected = true
             }
             row {
                 setterCheckbox = checkBox("Generate Setters")
-                setterCheckbox!!.component.isSelected = true
+                setterCheckbox.component.isSelected = true
             }
             row {
                 deleterCheckbox = checkBox("Generate Deleters")
@@ -70,7 +69,7 @@ class GenerateGettersSetters : AnAction() {
                 for (property in parent.instanceAttributes) {
                     row {
                         val temp = checkBox(property.text.substring("self.".length))
-                        temp.component.isSelected = property.text.startsWith("self.__")
+                        temp.component.isSelected = property.text.startsWith("self._")
                         properties[property.text] = temp
                     }
                 }
@@ -85,9 +84,9 @@ class GenerateGettersSetters : AnAction() {
             return
 
         // Check the user input to determine which methods to generate
-        val isGetter = getterCheckbox!!.component.isSelected
-        val isSetter = setterCheckbox!!.component.isSelected
-        val isDeleter = deleterCheckbox!!.component.isSelected
+        val isGetter = getterCheckbox.component.isSelected
+        val isSetter = setterCheckbox.component.isSelected
+        val isDeleter = deleterCheckbox.component.isSelected
 
         val factory = PyElementGenerator.getInstance(project)
         val language = LanguageLevel.getLatest()
@@ -102,6 +101,7 @@ class GenerateGettersSetters : AnAction() {
 
             var name = property.name ?: return
             name = if (name.startsWith("__")) name.substring(2) else name
+            name = if (name.startsWith("_")) name.substring(1) else name
 
             if (isGetter) {
                 val getter = factory.createFromText(language, PyFunction::class.java, getterFormat.string.replace("${'$'}name$", name).replace("${'$'}property$", property.name.orEmpty()))
