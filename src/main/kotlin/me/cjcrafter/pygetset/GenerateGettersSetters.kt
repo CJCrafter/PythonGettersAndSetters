@@ -7,12 +7,12 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.ui.Messages
-import com.intellij.psi.codeStyle.CodeStyleManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.Cell
 import com.intellij.ui.dsl.builder.panel
 import com.jetbrains.python.psi.*
+import java.lang.IllegalArgumentException
 
 /**
  * This action creates a popup window. The window includes options that allows
@@ -62,11 +62,24 @@ class GenerateGettersSetters : AnAction() {
             }
 
             group("Properties:") {
+
+                // Get properties from @dataclass annotation
+                for (property in parent.classAttributes) {
+                    row {
+                        val name = property.name ?: throw IllegalArgumentException("Property $property has no name")
+                        val temp = checkBox(name)
+                        temp.component.isSelected = name.startsWith("_")
+                        properties[name] = temp
+                    }
+                }
+
+                // Get properties from __init__ method
                 for (property in parent.instanceAttributes) {
                     row {
-                        val temp = checkBox(property.text.substring("self.".length))
-                        temp.component.isSelected = property.text.startsWith("self._")
-                        properties[property.text] = temp
+                        val name = property.name ?: throw IllegalArgumentException("Property $property has no name")
+                        val temp = checkBox(name)
+                        temp.component.isSelected = name.startsWith("_")
+                        properties[name] = temp
                     }
                 }
             }
@@ -94,39 +107,41 @@ class GenerateGettersSetters : AnAction() {
         val deleterFormat = TemplateSettings.getInstance().getTemplate("deleter", "Python")!!
 
         // Loop through the python class' instance variables to generate methods
-        for (property in parent.instanceAttributes) {
+        for (pair in properties) {
 
             // Check to see if the user skipped this property
-            if (properties[property.text]?.component?.isSelected == false)
+            if (!pair.value.component.isSelected)
                 continue
 
-            var name = property.name ?: return
-            name = if (name.startsWith("__")) name.substring(2) else name
-            name = if (name.startsWith("_")) name.substring(1) else name
+            val name = pair.key.trim('_')
 
+            // Order is important, getter MUST come before setter/deleter
             if (isGetter) {
-                val getter = factory.createFromText(language, PyFunction::class.java, getterFormat.string.replace("${'$'}name$", name).replace("${'$'}property$", property.name.orEmpty()))
+                val code = getterFormat.string.replace("\$name$", name).replace("\$property$", pair.key)
+                val getter = factory.createFromText(language, PyFunction::class.java, code)
                 gettersAndSetters.add(getter)
             }
             if (isSetter) {
-                val setter = factory.createFromText(language, PyFunction::class.java, setterFormat.string.replace("${'$'}name$", name).replace("${'$'}property$", property.name.orEmpty()))
+                val code = setterFormat.string.replace("\$name$", name).replace("\$property$", pair.key)
+                val setter = factory.createFromText(language, PyFunction::class.java, code)
                 gettersAndSetters.add(setter)
             }
             if (isDeleter) {
-                val deleter = factory.createFromText(language, PyFunction::class.java, deleterFormat.string.replace("${'$'}name$", name).replace("${'$'}property$", property.name.orEmpty()))
+                val code = deleterFormat.string.replace("\$name$", name).replace("\$property$", pair.key)
+                val deleter = factory.createFromText(language, PyFunction::class.java, code)
                 gettersAndSetters.add(deleter)
             }
         }
 
+        // The initMethod is used to determine order. Ideally, we can put the
+        // getters/setters right after the init method.
         val initMethod = parent.findMethodByName("__init__", false, null)
-        //if (initMethod == null) {
-        //    Messages.showErrorDialog(project, "Could not find __init__ method in ${parent.name}", "Error")
-        //    return
-        //}
 
-        // We need these reversed since we always add the method right below
-        // the __init__ method (which pushes the other methods down)
-        gettersAndSetters.reverse()
+        // Using the "add after" method reverses the order of our getters/setters.
+        // This is a problem since getters MUST come before setters/deleters
+        if (initMethod != null) {
+            gettersAndSetters.reverse()
+        }
 
         // WriteCommandAction lets users undo the generation
         WriteCommandAction.runWriteCommandAction(project) {
