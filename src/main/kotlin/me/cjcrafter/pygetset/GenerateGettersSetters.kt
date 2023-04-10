@@ -7,6 +7,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.ui.Messages
+import com.intellij.psi.codeStyle.CodeStyleManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.Cell
@@ -118,20 +119,23 @@ class GenerateGettersSetters : AnAction() {
         }
 
         val initMethod = parent.findMethodByName("__init__", false, null)
-        if (initMethod == null) {
-            Messages.showErrorDialog(project, "Could not find __init__ method in ${parent.name}", "Error")
-            return
-        }
+        //if (initMethod == null) {
+        //    Messages.showErrorDialog(project, "Could not find __init__ method in ${parent.name}", "Error")
+        //    return
+        //}
 
         // We need these reversed since we always add the method right below
         // the __init__ method (which pushes the other methods down)
         gettersAndSetters.reverse()
 
         // WriteCommandAction lets users undo the generation
-        val classElement = initMethod.parent
         WriteCommandAction.runWriteCommandAction(project) {
-            for (method in gettersAndSetters)
-                classElement.addAfter(method, initMethod)
+            for (method in gettersAndSetters) {
+                if (initMethod != null)
+                    parent.statementList.addAfter(method, initMethod)
+                else
+                    parent.statementList.add(method)
+            }
         }
     }
 }
