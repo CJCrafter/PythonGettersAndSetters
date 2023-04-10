@@ -6,7 +6,7 @@
       <option name="Python_Class" value="true" />
     </context>
   </template>
-  <template name="setter" value="@$name$.setter&#10;def $name$(self, $name$):&#10;    self.$property$ = $name$&#10;    " description="setter property" toReformat="false" toShortenFQNames="true">
+  <template name="setter" value="@$name$.setter&#10;def $name$(self, value):&#10;    self.$property$ = value&#10;    " description="setter property" toReformat="false" toShortenFQNames="true">
     <variable name="name" expression="" defaultValue="" alwaysStopAt="true" />
     <variable name="property_name" expression="" defaultValue="" alwaysStopAt="true" />
     <context>

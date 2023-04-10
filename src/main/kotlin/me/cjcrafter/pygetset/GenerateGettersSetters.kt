@@ -117,17 +117,17 @@ class GenerateGettersSetters : AnAction() {
 
             // Order is important, getter MUST come before setter/deleter
             if (isGetter) {
-                val code = getterFormat.string.replace("\$name$", name).replace("\$property$", pair.key)
+                val code = getterFormat.string.replace("\$name$", name).replace("\$property$", pair.key) + "\n"
                 val getter = factory.createFromText(language, PyFunction::class.java, code)
                 gettersAndSetters.add(getter)
             }
             if (isSetter) {
-                val code = setterFormat.string.replace("\$name$", name).replace("\$property$", pair.key)
+                val code = setterFormat.string.replace("\$name$", name).replace("\$property$", pair.key) + "\n"
                 val setter = factory.createFromText(language, PyFunction::class.java, code)
                 gettersAndSetters.add(setter)
             }
             if (isDeleter) {
-                val code = deleterFormat.string.replace("\$name$", name).replace("\$property$", pair.key)
+                val code = deleterFormat.string.replace("\$name$", name).replace("\$property$", pair.key) + "\n"
                 val deleter = factory.createFromText(language, PyFunction::class.java, code)
                 gettersAndSetters.add(deleter)
             }
