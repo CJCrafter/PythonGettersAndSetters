@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "me.cjcrafter"
-version = "0.4.2"
+version = "0.5.0"
 
 repositories {
     mavenCentral()
@@ -16,7 +16,7 @@ repositories {
 intellij {
     plugins.set(project.findProperty("platformPlugins").toString().split(',').map(String::trim).filter(String::isNotEmpty))
 
-    version.set("2022.1.4")
+    version.set("2023.2")
     type.set("PY") // PY = PyCharm Professional, PC = PyCharm Community
 
     plugins.set(listOf("Pythonid")) // Pythonid = PyCharm Professional, PythonCore = PyCharm Community
@@ -35,11 +35,6 @@ tasks {
     }
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions.jvmTarget = "11"
-    }
-
-    patchPluginXml {
-        sinceBuild.set("221")
-        untilBuild.set("231.*")
     }
 
     signPlugin {
