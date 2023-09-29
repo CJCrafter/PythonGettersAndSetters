@@ -7,6 +7,7 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.ui.Messages
+import com.intellij.psi.PsiWhiteSpace
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.dsl.builder.Cell
@@ -27,10 +28,17 @@ class GenerateGettersSetters : AnAction() {
         val project = e.project ?: return
         val editor = e.getData(CommonDataKeys.EDITOR) ?: return
         val psiFile = e.getData(CommonDataKeys.PSI_FILE) ?: return
-        val element = psiFile.findElementAt(editor.caretModel.offset) ?: return
+        var element = psiFile.findElementAt(editor.caretModel.offset) ?: return
+
+        // We might click on a whitespace, which is not always associated with
+        // a PyClass. Usually, this happens because the user clicked on a new line
+        // character. Just go 1 character before.
+        if (element is PsiWhiteSpace) {
+            element = psiFile.findElementAt(editor.caretModel.offset - 1) ?: return
+        }
 
         // Find the class that the caret is currently in
-        val parent = PsiTreeUtil.getParentOfType(element, PyClass::class.java)
+        val parent = PsiTreeUtil.getContextOfType(element, PyClass::class.java)
         if (parent == null) {
             Messages.showErrorDialog(project, "Could not find python class: $element", "Error")
             return
