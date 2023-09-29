@@ -38,9 +38,19 @@ class GenerateGettersSetters : AnAction() {
         }
 
         // Find the class that the caret is currently in
-        val parent = PsiTreeUtil.getContextOfType(element, PyClass::class.java)
+        var parent = PsiTreeUtil.getContextOfType(element, PyClass::class.java)
+
+        // If parent is null, then the user's caret is not in a class. We should
+        // search the file for a class. Otherwise, show an error to the user.
         if (parent == null) {
-            Messages.showErrorDialog(project, "Could not find python class: $element", "Error")
+            val classes = PsiTreeUtil.findChildrenOfType(psiFile, PyClass::class.java)
+            if (classes.size == 1) {
+                parent = classes.first()
+            }
+        }
+
+        if (parent == null) {
+            Messages.showErrorDialog(project, "Could not find any class... Move your caret so it is inside of a Python class!", "Error")
             return
         }
 
