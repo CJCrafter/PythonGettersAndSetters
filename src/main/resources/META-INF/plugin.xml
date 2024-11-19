@@ -2,7 +2,8 @@
     <id>me.cjcrafter.py-get-set</id>
     <name>Python Getters and Setters</name>
     <vendor email="collinjbarber@gmail.com" url="https://www.github.com/cjcrafter">CJCrafter</vendor>
-
+    <idea-version since-build="2023.2" />
+    
     <description><![CDATA[
     Adds getter/setter/deleter generation options to for Python. When you generate
     getters and setters, you will be prompted asking for which instance variables
