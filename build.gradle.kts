@@ -1,26 +1,29 @@
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm") version "1.9.20-Beta2"
-    id("org.jetbrains.intellij") version "1.15.0"
+    id("org.jetbrains.intellij.platform") version "2.1.0"
 }
 
 group = "me.cjcrafter"
-version = "0.5.1"
+version = "0.5.2"
 
 repositories {
     mavenCentral()
+
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
-// Configure Gradle IntelliJ Plugin
-// Read more: https://plugins.jetbrains.com/docs/intellij/tools-gradle-intellij-plugin.html
-intellij {
-    plugins.set(project.findProperty("platformPlugins").toString().split(',').map(String::trim).filter(String::isNotEmpty))
+dependencies {
+    intellijPlatform {
+        pycharmCommunity("2023.2")
+        bundledPlugins("PythonCore")
 
-    version.set("2023.2")
-    type.set("PY") // PY = PyCharm Professional, PC = PyCharm Community
-
-    plugins.set(listOf("Pythonid")) // Pythonid = PyCharm Professional, PythonCore = PyCharm Community
-    downloadSources.set(false)
+        pluginVerifier()
+        zipSigner()
+        instrumentationTools()
+    }
 }
 
 java.sourceSets["main"].java {
